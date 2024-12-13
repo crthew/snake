@@ -42,7 +42,7 @@ public class GameLaunch extends Application {
 
         Snake snake = gameLogic.getSnake();
         for(Position pos : snake.getSnakeBody()) {
-            gc.fillRect(pos.get);
+            gc.fillRect(pos.getX(), pos.getY(), TILE_SIZE, TILE_SIZE);
         }
     }
 

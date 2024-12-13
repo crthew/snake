@@ -33,7 +33,6 @@ public class Position {
     public void moveRight() {
         x = x + 1;
     }
-
     public void setCoord(int x, int y) {
         this.x = x;
         this.y = y;
