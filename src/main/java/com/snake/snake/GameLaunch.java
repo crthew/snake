@@ -18,9 +18,9 @@ import static javafx.scene.paint.Color.*;
 
 public class GameLaunch extends Application {
 
-    private static final int TILE_SIZE = 20;
-    private static final int GAME_HEIGHT = 1000;
-    private static final int GAME_WIDTH = 1000;
+    private static final int TILE_SIZE = 25;
+    private static final int GAME_HEIGHT = 750;
+    private static final int GAME_WIDTH = 750;
     private static final int TICK_TIME = 100;
     private static final Color SNAKE_HEAD_COLOUR = GREEN;
     private static final Color SNAKE_BODY_COLOUR = DARKGREEN;
@@ -35,7 +35,7 @@ public class GameLaunch extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        BorderPane root = new BorderPane();
+        root = new BorderPane();
         Scene scene = new Scene(root);
         this.canvas = new Canvas(GAME_HEIGHT, GAME_WIDTH);
         stage.initStyle(StageStyle.UNDECORATED);
