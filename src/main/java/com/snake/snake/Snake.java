@@ -9,54 +9,54 @@ import static javafx.scene.input.KeyCode.*;
 
 public class Snake {
     private final int TILE_SIZE;
-    private final ArrayList<GridPosition> SNAKE_BODY = new ArrayList<>();
+    private final ArrayList<SnakePiece> SNAKE_BODY = new ArrayList<>();
 
     public Snake(int x, int y, int tileSize) {
         TILE_SIZE = tileSize;
-        SNAKE_BODY.add(new GridPosition(x,y, TILE_SIZE));
+        SNAKE_BODY.add(new SnakePiece(x,y, TILE_SIZE, Direction.DOWN));
     }
 
-    public void moveSnake(KeyCode dir) {
+    public void moveSnake(Direction dir) {
         if(SNAKE_BODY.size() > 1) {
             for(int i = SNAKE_BODY.size() - 1; i >= 1; i--) {
-                SNAKE_BODY.get(i).setPos(SNAKE_BODY.get(i - 1));
+                SNAKE_BODY.get(i).getPosition().setPos(SNAKE_BODY.get(i - 1).getPosition());
+                SNAKE_BODY.get(i).setDir(SNAKE_BODY.get(i - 1).getDir());
             }
         }
-        if(dir == W || dir == A || dir == S || dir == D) {
-            switch (dir) {
-                case W -> SNAKE_BODY.get(0).moveUp();
-                case A -> SNAKE_BODY.get(0).moveLeft();
-                case S -> SNAKE_BODY.get(0).moveDown();
-                case D -> SNAKE_BODY.get(0).moveRight();
-            }
-        }
-
+        SNAKE_BODY.get(0).setDir(dir);
+        movePiece(SNAKE_BODY.get(0));
     }
     public void growSnake() {
-        GridPosition newSnake = new GridPosition(SNAKE_BODY.getLast().getX(), SNAKE_BODY.getLast().getY(), TILE_SIZE);
-        newSnake.moveLeft();
-
-        System.out.println("new snake: " + newSnake.getX() + " | " + newSnake.getY());
-        System.out.println("old snake: " + SNAKE_BODY.getLast().getX() + " | " + SNAKE_BODY.getLast().getY());
-        SNAKE_BODY.add(newSnake);
+        SnakePiece newPiece = new SnakePiece(SNAKE_BODY.getLast().getX(), SNAKE_BODY.getLast().getY(), TILE_SIZE, Direction.flipDirection(SNAKE_BODY.getLast().getDir()));
+        movePiece(newPiece);
+        newPiece.setDir(Direction.flipDirection(newPiece.getDir()));
+        SNAKE_BODY.add(newPiece);
     }
 
-    public ArrayList<GridPosition> getSnakeBody() {
+    public ArrayList<SnakePiece> getSnakeBody() {
         return SNAKE_BODY;
     }
     public ArrayList<GridPosition> getSnakeTail() {
         ArrayList<GridPosition> snakeTail = new ArrayList<>();
         for(int i = 1; i < SNAKE_BODY.size(); i++) {
-            snakeTail.add(SNAKE_BODY.get(i));
+            snakeTail.add(SNAKE_BODY.get(i).getPosition());
         }
         return snakeTail;
     }
     public GridPosition getHead() {
-        return SNAKE_BODY.getFirst();
+        return SNAKE_BODY.getFirst().getPosition();
     }
 
     public int getLength() {
         return SNAKE_BODY.size();
     }
 
+    private void movePiece(SnakePiece piece) {
+        switch (piece.getDir()) {
+            case UP -> piece.getPosition().moveUp();
+            case LEFT -> piece.getPosition().moveLeft();
+            case DOWN -> piece.getPosition().moveDown();
+            case RIGHT -> piece.getPosition().moveRight();
+        }
+    }
 }

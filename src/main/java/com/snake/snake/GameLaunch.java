@@ -1,7 +1,6 @@
 package com.snake.snake;
 
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -9,9 +8,9 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -23,7 +22,8 @@ public class GameLaunch extends Application {
     private static final int GAME_HEIGHT = 1000;
     private static final int GAME_WIDTH = 1000;
     private static final int TICK_TIME = 100;
-    private static final Color SNAKE_COLOUR = GREEN;
+    private static final Color SNAKE_HEAD_COLOUR = GREEN;
+    private static final Color SNAKE_BODY_COLOUR = DARKGREEN;
     private static final Color APPLE_COLOUR = RED;
 
     private Canvas canvas;
@@ -38,6 +38,8 @@ public class GameLaunch extends Application {
         BorderPane root = new BorderPane();
         Scene scene = new Scene(root);
         this.canvas = new Canvas(GAME_HEIGHT, GAME_WIDTH);
+        stage.initStyle(StageStyle.UNDECORATED);
+
         root.setCenter(canvas);
         drawGame();
         stage.setScene(scene);
@@ -59,12 +61,15 @@ public class GameLaunch extends Application {
     private void drawGame() {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+
         gc.setFill(BLACK);
         gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
         Snake snake = gameLogic.getSnake();
-        for(GridPosition pos : snake.getSnakeBody()) {
-            gc.setFill(SNAKE_COLOUR);
+        gc.setFill(SNAKE_HEAD_COLOUR);
+        gc.fillRect(snake.getHead().getX(), snake.getHead().getY(), TILE_SIZE, TILE_SIZE);
+        for(GridPosition pos : snake.getSnakeTail()) {
+            gc.setFill(SNAKE_BODY_COLOUR);
             gc.fillRect(pos.getX(), pos.getY(), TILE_SIZE, TILE_SIZE);
         }
 
@@ -74,8 +79,15 @@ public class GameLaunch extends Application {
     }
 
     private void updKey(KeyEvent e) {
-        System.out.println(e.getCode());
-        gameLogic.setKey(e.getCode());
+        gameLogic.setDir(e.getCode());
+    }
+
+    public static int getGameWidth() {
+        return GAME_WIDTH;
+    }
+
+    public static int getGameHeight() {
+        return GAME_HEIGHT;
     }
 
     public static void main(String[] args) {
